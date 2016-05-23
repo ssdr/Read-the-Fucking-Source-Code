@@ -24,10 +24,10 @@ done
 }
 
 if (( $# != 2 ))
-    then
+then
     echo "parameter error"
     exit
-    fi
+fi
 
 fun_dir ${1%/} ${2%/}
 
