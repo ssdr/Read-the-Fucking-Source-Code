@@ -19,7 +19,7 @@
 #define NGINX_VER_BUILD    NGINX_VER
 #endif
 
-#define NGINX_VAR          "NGINX" //��ngx_exec_new_binary ͨ���û����������浱ǰ��һЩ���������µ�nginx������ʱ�򣬾ʹӻ�������NGINX_VAR�л�ȡ����
+#define NGINX_VAR          "NGINX" //见ngx_exec_new_binary 通过该环境变量保存当前的一些参数，等新的nginx起来的时候，就从环境变量NGINX_VAR中获取参数
 #define NGX_OLDPID_EXT     ".oldbin"
 
 
