@@ -227,6 +227,4 @@
 |   |   |   |   \-- ngx_http_init_request
 |   |   |   |   |   \-- ngx_http_process_request_line
 ...
-
 */
-
