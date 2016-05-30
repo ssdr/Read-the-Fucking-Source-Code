@@ -58,10 +58,10 @@ ngx_file_aio_init(ngx_file_t *file, ngx_pool_t *pool)
 }
 
 /*
- Õû¸öÍøÂçÊÂ¼şµÄÇı¶¯»úÖÆ¾ÍÊÇÕâÑùÍ¨¹ıngx_eventfdÍ¨ÖªÃèÊö·ûºÍngx_epoll_eventfd
-handler»Øµ÷·½·¨£¬²¢ÓëÎÄ¼şÒì²½I/OÊÂ¼ş½áºÏÆğÀ´µÄ¡£
-    ÄÇÃ´£¬ÔõÑùÏòÒì²½I/OÉÏÏÂÎÄÖĞÌá½»Òì²½I/O²Ù×÷ÄØ£¿¿´¿´ngx_linux_aio read.cÎÄ¼şÖĞ
-µÄngx_file_aio_read·½·¨£¬ÔÚ´ò¿ªÎÄ¼şÒì²½I/Oºó£¬Õâ¸ö·½·¨½«»á¸ºÔğ´ÅÅÌÎÄ¼şµÄ¶ÁÈ¡
+ æ•´ä¸ªç½‘ç»œäº‹ä»¶çš„é©±åŠ¨æœºåˆ¶å°±æ˜¯è¿™æ ·é€šè¿‡ngx_eventfdé€šçŸ¥æè¿°ç¬¦å’Œngx_epoll_eventfd
+handlerå›è°ƒæ–¹æ³•ï¼Œå¹¶ä¸æ–‡ä»¶å¼‚æ­¥I/Oäº‹ä»¶ç»“åˆèµ·æ¥çš„ã€‚
+    é‚£ä¹ˆï¼Œæ€æ ·å‘å¼‚æ­¥I/Oä¸Šä¸‹æ–‡ä¸­æäº¤å¼‚æ­¥I/Oæ“ä½œå‘¢ï¼Ÿçœ‹çœ‹ngx_linux_aio read.cæ–‡ä»¶ä¸­
+çš„ngx_file_aio_readæ–¹æ³•ï¼Œåœ¨æ‰“å¼€æ–‡ä»¶å¼‚æ­¥I/Oåï¼Œè¿™ä¸ªæ–¹æ³•å°†ä¼šè´Ÿè´£ç£ç›˜æ–‡ä»¶çš„è¯»å–
 */
 ssize_t
 ngx_file_aio_read(ngx_file_t *file, u_char *buf, size_t size, off_t offset,
