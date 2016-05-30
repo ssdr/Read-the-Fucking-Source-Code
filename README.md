@@ -8,4 +8,6 @@
 
 如果在你的环境中遇到注释乱码的情况，请执行以下命令：
 
-> iconv -c -f gb2312 -t utf-8 {} -o {}
+> file src/* | grep ISO-8859 | awk -F':' '{print $1}' | xargs -I {} ./iconv.sh {}
+
+其中，iconv.sh在notes目录下。

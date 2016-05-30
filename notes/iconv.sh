@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# file src/* | grep ISO-8859 | awk -F':' '{print $1}' | xargs -I {} ./iconv.sh {}
+
 if [ $# != 1 ]
 then
     echo "bad arg"
