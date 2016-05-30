@@ -61,7 +61,7 @@ static char *ngx_openssl_engine(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 static void ngx_openssl_exit(ngx_cycle_t *cycle);
 
 
-static ngx_command_t  ngx_openssl_commands[] = { //打开ssl硬件加速，需要硬件支持，通过openssl engine -t查看
+static ngx_command_t  ngx_openssl_commands[] = { //鎵撳紑ssl纭欢鍔犻�燂紝闇�瑕佺‖浠舵敮鎸侊紝閫氳繃openssl engine -t鏌ョ湅
 
     { ngx_string("ssl_engine"),
       NGX_MAIN_CONF|NGX_DIRECT_CONF|NGX_CONF_TAKE1,
