@@ -26,7 +26,7 @@ static ngx_int_t ngx_stream_cmp_conf_addrs(const void *one, const void *two);
 
 ngx_uint_t  ngx_stream_max_module;
 
-//Ïà¹ØÅäÖÃ¼ûngx_event_core_commands ngx_http_core_commands ngx_stream_commands ngx_http_core_commands ngx_core_commands  ngx_mail_commands
+//ç›¸å…³é…ç½®è§ngx_event_core_commands ngx_http_core_commands ngx_stream_commands ngx_http_core_commands ngx_core_commands  ngx_mail_commands
 static ngx_command_t  ngx_stream_commands[] = {
 
     { ngx_string("stream"),
