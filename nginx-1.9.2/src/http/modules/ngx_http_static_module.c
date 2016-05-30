@@ -44,11 +44,11 @@ ngx_module_t  ngx_http_static_module = {
     NGX_MODULE_V1_PADDING
 };
 
-//ngx_http_static_moduleÄ£¿éÖ÷ÒªÊÇÔÚnginxÏµÍ³ÖĞ²éÕÒuriÖ¸¶¨ÎÄ¼şÊÇ·ñ´æÔÚ£¬´æÔÚÔòÖ±½Ó·µ»Ø¸ø¿Í»§¶Ë
+//ngx_http_static_moduleæ¨¡å—ä¸»è¦æ˜¯åœ¨nginxç³»ç»Ÿä¸­æŸ¥æ‰¾uriæŒ‡å®šæ–‡ä»¶æ˜¯å¦å­˜åœ¨ï¼Œå­˜åœ¨åˆ™ç›´æ¥è¿”å›ç»™å®¢æˆ·ç«¯
 static ngx_int_t
 ngx_http_static_handler(ngx_http_request_t *r)
-{//×¢Òâ:ngx_http_static_handlerÈç¹ûuri²»ÊÇÒÔ/½áÎ²·µ»Ø£¬ngx_http_index_handler²»ÒÔ/½áÎ²·µ»Ø
-//ngx_http_static_handler ngx_http_index_handlerÃ¿´Î¶¼Òª»ñÈ¡»º´æĞÅÏ¢statĞÅÏ¢£¬Òò´ËÃ¿´Î»ñÈ¡ºÜ¿ÉÄÜÊÇÉÏÒ»´ÎstatÖ´ĞĞµÄÊ±ºò»ñÈ¡µÄĞÅÏ¢£¬³ı·Ç»º´æ¹ıÆÚ
+{//æ³¨æ„:ngx_http_static_handlerå¦‚æœuriä¸æ˜¯ä»¥/ç»“å°¾è¿”å›ï¼Œngx_http_index_handlerä¸ä»¥/ç»“å°¾è¿”å›
+//ngx_http_static_handler ngx_http_index_handleræ¯æ¬¡éƒ½è¦è·å–ç¼“å­˜ä¿¡æ¯statä¿¡æ¯ï¼Œå› æ­¤æ¯æ¬¡è·å–å¾ˆå¯èƒ½æ˜¯ä¸Šä¸€æ¬¡statæ‰§è¡Œçš„æ—¶å€™è·å–çš„ä¿¡æ¯ï¼Œé™¤éç¼“å­˜è¿‡æœŸ
     u_char                    *last, *location;
     size_t                     root, len;
     ngx_str_t                  path;
@@ -65,7 +65,7 @@ ngx_http_static_handler(ngx_http_request_t *r)
     }
 
     if (r->uri.data[r->uri.len - 1] == '/') { 
-    //×¢Òâ:ngx_http_static_handlerÈç¹ûuri²»ÊÇÒÔ/½áÎ²·µ»Ø£¬ngx_http_index_handler²»ÒÔ/½áÎ²·µ»Ø
+    //æ³¨æ„:ngx_http_static_handlerå¦‚æœuriä¸æ˜¯ä»¥/ç»“å°¾è¿”å›ï¼Œngx_http_index_handlerä¸ä»¥/ç»“å°¾è¿”å›
         return NGX_DECLINED;
     }
 
@@ -76,7 +76,7 @@ ngx_http_static_handler(ngx_http_request_t *r)
      * so we do not need to reserve memory for '/' for possible redirect
      */
 
-    last = ngx_http_map_uri_to_path(r, &path, &root, 0); //Í¨¹ır->uri»ñÈ¡Õû¸öÂ·¾¶»òÕßÎÄ¼ş¾ø¶ÔÂ·¾¶
+    last = ngx_http_map_uri_to_path(r, &path, &root, 0); //é€šè¿‡r->uriè·å–æ•´ä¸ªè·¯å¾„æˆ–è€…æ–‡ä»¶ç»å¯¹è·¯å¾„
     if (last == NULL) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
@@ -135,7 +135,7 @@ ngx_http_static_handler(ngx_http_request_t *r)
         }
 
         /* 
-           Èç¹ûÎÄ¼ş²»´æÔÚ£¬Ôò·µ»Ø³öÈ¥ºó»á½áÊøÇëÇó
+           å¦‚æœæ–‡ä»¶ä¸å­˜åœ¨ï¼Œåˆ™è¿”å›å‡ºå»åä¼šç»“æŸè¯·æ±‚
            2016/02/16 10:27:36[            ngx_http_static_handler,   139]  [error] 19131#19131: *1 open() "/var/yyz/www/ttt/xx.html" failed (2: No such file or directory), client: 10.2.13.167, server: localhost, request: "GET / HTTP/1.1", host: "10.2.13.167"
            2016/02/16 10:27:36[          ngx_http_finalize_request,  2598]  [debug] 19131#19131: *1 http finalize request rc: 404, "/ttt/xx.html?" a:1, c:2
           */
@@ -225,7 +225,7 @@ ngx_http_static_handler(ngx_http_request_t *r)
 
     r->headers_out.status = NGX_HTTP_OK;
     r->headers_out.content_length_n = of.size;
-    r->headers_out.last_modified_time = of.mtime; //ÎÄ¼ş×îºó±»ĞŞ¸ÄµÄÊ±¼ä
+    r->headers_out.last_modified_time = of.mtime; //æ–‡ä»¶æœ€åè¢«ä¿®æ”¹çš„æ—¶é—´
 
     if (ngx_http_set_etag(r) != NGX_OK) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
@@ -269,7 +269,7 @@ ngx_http_static_handler(ngx_http_request_t *r)
     b->file->fd = of.fd;
     b->file->name = path;
     b->file->log = log;
-    b->file->directio = of.is_directio; //×¢ÒâÕâÀïÈç¹ûÎÄ¼ş´óĞ¡´óÓÚdirectionÉèÖÃ£¬ÔòÖÃ1£¬ºóÃæ»áÊ¹ÄÜdirect I/O·½Ê½,¼ûngx_directio_on
+    b->file->directio = of.is_directio; //æ³¨æ„è¿™é‡Œå¦‚æœæ–‡ä»¶å¤§å°å¤§äºdirectionè®¾ç½®ï¼Œåˆ™ç½®1ï¼Œåé¢ä¼šä½¿èƒ½direct I/Oæ–¹å¼,è§ngx_directio_on
 
     out.buf = b;
     out.next = NULL;
