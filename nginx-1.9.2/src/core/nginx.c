@@ -190,7 +190,7 @@ if (ngx_signal) { //加了-S参数
         return ngx_signal_process(cycle, ngx_signal);
     }
 */
-static char        *ngx_signal; 
+static char        *ngx_signal;
 
 
 static char **ngx_os_environ;
@@ -249,7 +249,7 @@ main(int argc, char *const *argv)
                                    "stop, quit, reopen, reload" NGX_LINEFEED
 #ifdef NGX_PREFIX
                 "  -p prefix     : set prefix path (default: "
-                                   NGX_PREFIX ")" NGX_LINEFEED  //指定安装目录  
+                                   NGX_PREFIX ")" NGX_LINEFEED  //指定安装目录
 #else
                 "  -p prefix     : set prefix path (default: NONE)" NGX_LINEFEED
 #endif
@@ -454,7 +454,7 @@ socket监听状况，还是需要写到日志文件中去的。在nginx的main�
 
     if (ngx_process == NGX_PROCESS_SINGLE) { //如果配置的是单进程工作模式，好像不会走到这里
         ngx_single_process_cycle(cycle);
-        
+
     } else { //一般都是走到这里，master方式
         ngx_master_process_cycle(cycle);
 
@@ -463,7 +463,7 @@ socket监听状况，还是需要写到日志文件中去的。在nginx的main�
     return 0;
 }
 /*
-?调用ngx_add_inherited_sockets()继承sockets； 
+?调用ngx_add_inherited_sockets()继承sockets；
 ?解析环境变量NGINX_VAR="NGINX"中的sockets，并保存至ngx_cycle.listening数组；
 ?设置ngx_inherited=1；
 ?调用ngx_set_inherited_sockets()逐一对ngx_cycle.listening数组中的sockets进行设置；
@@ -473,7 +473,7 @@ socket监听状况，还是需要写到日志文件中去的。在nginx的main�
 ngx_add_inherited_sockets 函数通过环境变量NGINX完成socket的继承，继承来的socket将会放到init_cycle的listening数组中。在NGINX环
 境变量中，每个socket中间用冒号或分号隔开。完成继承同时设置全局变量ngx_inherited为1
 */
-/*  
+/*
 图8-6中的第2步实际上就是在调用表812中的ngx_add_inherited_ sockets方法。Nginx在不重启服务升级时，也就是我们说过的平滑升级（参见1.9节）时，
 它会不重启master进程而启动新版本的Nginx程序。这样，旧版本的master进程会通过execve系统调用来启动新版本的master进程（先fork出子进程再
 调用exec来运行新程序），这时旧版本的master进程必须要通过一种方式告诉新版本的master进程这是在平滑升级，并且传递一些必要的信息。Nginx是通过环
@@ -487,14 +487,14 @@ ngx_add_inherited_sockets(ngx_cycle_t *cycle)
     ngx_listening_t  *ls;
 
     //getenv()用来取得参数envvar环境变量的内容。参数envvar为环境变量的名称，如果该变量存在则会返回指向该内容的指针
-    inherited = (u_char *) getenv(NGINX_VAR); //获取环境变量 这里的"NGINX_VAR"是宏定义，值为"NGINX"   
+    inherited = (u_char *) getenv(NGINX_VAR); //获取环境变量 这里的"NGINX_VAR"是宏定义，值为"NGINX"
     if (inherited == NULL) {
         return NGX_OK;
     }
     ngx_log_error(NGX_LOG_NOTICE, cycle->log, 0,
                   "using inherited sockets from \"%s\"", inherited);
 
-    //初始化ngx_cycle.listening数组，并且数组中包含10个元素   
+    //初始化ngx_cycle.listening数组，并且数组中包含10个元素
     if (ngx_array_init(&cycle->listening, cycle->pool, 10,
                        sizeof(ngx_listening_t))
         != NGX_OK)
@@ -502,9 +502,9 @@ ngx_add_inherited_sockets(ngx_cycle_t *cycle)
         return NGX_ERROR;
     }
 
-    for (p = inherited, v = p; *p; p++) { //遍历环境变量   
-        if (*p == ':' || *p == ';') {//环境变量的值以':'or';'分开   
-            s = ngx_atoi(v, p - v); //转换十进制sockets   
+    for (p = inherited, v = p; *p; p++) { //遍历环境变量
+        if (*p == ':' || *p == ';') {//环境变量的值以':'or';'分开
+            s = ngx_atoi(v, p - v); //转换十进制sockets
             if (s == NGX_ERROR) {
                 ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
                               "invalid socket number \"%s\" in " NGINX_VAR
@@ -515,7 +515,7 @@ ngx_add_inherited_sockets(ngx_cycle_t *cycle)
 
             v = p + 1;
 
-            ls = ngx_array_push(&cycle->listening); //返回新分配的数组指针地址(在参考的blog里面这里解释可能有点错误)   
+            ls = ngx_array_push(&cycle->listening); //返回新分配的数组指针地址(在参考的blog里面这里解释可能有点错误)
             if (ls == NULL) {
                 return NGX_ERROR;
             }
@@ -526,7 +526,7 @@ ngx_add_inherited_sockets(ngx_cycle_t *cycle)
         }
     }
 
-    ngx_inherited = 1;  //表示已经的得到要继承的socket   
+    ngx_inherited = 1;  //表示已经的得到要继承的socket
 
     return ngx_set_inherited_sockets(cycle);
 }
@@ -733,23 +733,23 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
 
 /*
 Command-line parameters
-nginx supports the following command-line parameters: 
+nginx supports the following command-line parameters:
 
-?-? | -h ― print help for command-line parameters. 
-?-c file ― use an alternative configuration file instead of a default file. 
-?-g directives ― set global configuration directives, for example, 
+?-? | -h ― print help for command-line parameters.
+?-c file ― use an alternative configuration file instead of a default file.
+?-g directives ― set global configuration directives, for example,
 nginx -g "pid /var/run/nginx.pid; worker_processes `sysctl -n hw.ncpu`;"
-?-p prefix ― set nginx path prefix, i.e. a directory that will keep server files (default value is /usr/local/nginx). 
-?-q ― suppress non-error messages during configuration testing. 
-?-s signal ― send a signal to the master process. The argument signal can be one of: 
-?stop ― shut down quickly 
-?quit ― shut down gracefully 
-?reload ― reload configuration, start the new worker process with a new configuration, gracefully shut down old worker processes. 
-?reopen ― reopen log files 
-?-t ― test the configuration file: nginx checks the configuration for correct syntax, and then tries to open files referred in the configuration. 
-?-T ― same as -t, but additionally dump configuration files to standard output (1.9.2). 
-?-v ― print nginx version. 
-?-V ― print nginx version, compiler version, and configure parameters. 
+?-p prefix ― set nginx path prefix, i.e. a directory that will keep server files (default value is /usr/local/nginx).
+?-q ― suppress non-error messages during configuration testing.
+?-s signal ― send a signal to the master process. The argument signal can be one of:
+?stop ― shut down quickly
+?quit ― shut down gracefully
+?reload ― reload configuration, start the new worker process with a new configuration, gracefully shut down old worker processes.
+?reopen ― reopen log files
+?-t ― test the configuration file: nginx checks the configuration for correct syntax, and then tries to open files referred in the configuration.
+?-T ― same as -t, but additionally dump configuration files to standard output (1.9.2).
+?-v ― print nginx version.
+?-V ― print nginx version, compiler version, and configure parameters.
 */
 static ngx_int_t
 ngx_get_options(int argc, char *const *argv)
@@ -1326,7 +1326,7 @@ worker_cpu_affinity 0001 0010 0100 1000; 四个工作进程分别在四个指定
 
 如果是5he可以这样配置
 worker_cpu_affinity 00001 00010 00100 01000 10000; 其他多核类似
-*/ 
+*/
 static char *
 ngx_set_cpu_affinity(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
