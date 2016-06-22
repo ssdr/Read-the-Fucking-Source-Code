@@ -52,21 +52,11 @@ typedef u_char *(*ngx_http_log_handler_pt)(ngx_http_request_t *r,
 
 
 struct ngx_http_log_ctx_s { //在ngx_http_init_connection中创建空间
-    ngx_connection_t    *connection; //赋值见ngx_http_init_connection
-    ngx_http_request_t  *request; //赋值见ngx_http_create_request
+    ngx_connection_t    *connection;      //赋值见ngx_http_init_connection
+    ngx_http_request_t  *request;         //赋值见ngx_http_create_request
     ngx_http_request_t  *current_request; //赋值见ngx_http_create_request
 };
 
-/*
-格式:
-
-十六进制ea5表明这个暑假块有3749字节
-          这个块为3749字节，块数结束后\r\n表明这个块已经结束               这个块为3752字节，块数结束后\r\n表明这个块已经结束 
-                                                                                                                                 0表示最后一个块，最后跟两个\r\n
-ea5\r\n........................................................\r\n ea8\r\n..................................................\r\n 0\r\n\r\n
-
-参考:http://blog.csdn.net/zhangboyj/article/details/6236780
-*/
 struct ngx_http_chunked_s {
     ngx_uint_t           state;
     off_t                size;
@@ -74,15 +64,15 @@ struct ngx_http_chunked_s {
 };
 
 /*
-upstream模块每次接收到一段TCP流时都会回调mytest模块实现的process_header方法解析，达样就需要有一个上下文保存解析状态,因为获取上游服务器
-的相应头部的时候，可能需要读取多次。参考ngx_http_upstream_s中的process_header解释
+upstream模块每次接收到一段TCP流时都会回调mytest模块实现的process_header方法解析，这样就需要有一个上下文保存解析状态
+因为获取上游服务器的相应头部的时候，可能需要读取多次。参考ngx_http_upstream_s中的process_header解释
 */ //头部行解析过程见ngx_http_parse_status_line
 typedef struct {
-    ngx_uint_t           http_version; // HTTP/1.1 对应的为1001
-    ngx_uint_t           code; //// HTTP/1.1 200 OK 对应中的200
-    ngx_uint_t           count; //响应码数字位数，例如200，则为3
-    u_char              *start;//执行http 1/1 200 ok中的2的地址
-    u_char              *end; //end实际上指向的是\r的地址
+    ngx_uint_t           http_version;  // HTTP/1.1 对应的为1001
+    ngx_uint_t           code;          // HTTP/1.1 200 OK 对应中的200
+    ngx_uint_t           count;         //响应码数字位数，例如200，则为3
+    u_char              *start;         //指向http/1.1 200 ok中的2的地址
+    u_char              *end;           //指向的是\r的地址
 } ngx_http_status_t;
 
 /*
@@ -94,7 +84,7 @@ ngx_http_get_module ctx接受两个参数，其中第1个参数是ngx_http_reque
 就是某个HTTP模块的上下文结构体指针，如果这个HTTP模块没有设置过上下文，那么将
 会返回NULL空指针。因此，在任何一个HTTP模块中，都可以使用ngx_http_get_module_
 ctx获取所有HTTP模块为该请求创建的上下文结构体。
-*/ 
+*/
 //ngx_http_get_module_ctx存储运行过程中的各种状态(例如读取后端数据，可能需要多次读取)  ngx_http_get_module_loc_conf获取该模块在local{}中的配置信息
 //注意ngx_http_get_module_main_conf ngx_http_get_module_loc_conf和ngx_http_get_module_ctx的区别
 #define ngx_http_get_module_ctx(r, module)  (r)->ctx[module.ctx_index]  //主要是http upstream上下文
@@ -103,7 +93,7 @@ ctx获取所有HTTP模块为该请求创建的上下文结构体。
  ngx_http_set ctx接受3个参数，其中第1个参数是ngx_http_request_t指针，第2个参
 数是准备设置的上下文结构体的指针，第3个参数则是HTTP模块对象。
 */ //注意和conf->ctx的区别，参考ngx_http_get_module_loc_conf
-#define ngx_http_set_ctx(r, c, module)      r->ctx[module.ctx_index] = c; //主要是http upstream相关的fastcgi proxy memcached等上下文 
+#define ngx_http_set_ctx(r, c, module)      r->ctx[module.ctx_index] = c; //主要是http upstream相关的fastcgi proxy memcached等上下文
 
 
 ngx_int_t ngx_http_add_location(ngx_conf_t *cf, ngx_queue_t **locations,

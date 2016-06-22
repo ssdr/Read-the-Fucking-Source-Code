@@ -37,7 +37,7 @@ ngx_event_del_timer(ngx_event_t *ev, const char *func, unsigned int line)
     ngx_log_debug3(NGX_LOG_DEBUG_EVENT, ev->log, 0,
                    "%s event timer del: %d: %M", tmpbuf,
                     ngx_event_ident(ev->data), ev->timer.key);
-                    
+
     ngx_rbtree_delete(&ngx_event_timer_rbtree, &ev->timer);
 
 #if (NGX_DEBUG)
@@ -71,7 +71,7 @@ ngx_event_add_timer(ngx_event_t *ev, ngx_msec_t timer, const char *func, unsigne
     char tmpbuf[128];
 
     key = ngx_current_msec + timer;
-    
+
     if (ev->timer_set) { //如果之前该ev已经添加过，则先把之前的ev定时器del掉，然后在重新添加
 
         /*

@@ -77,7 +77,7 @@ static char *ngx_http_client_errors[] = {
 };
 
 //把ngx_http_headers_in中的所有成员做hash运算，然后存放到cmcf->headers_in_hash中
-ngx_http_header_t  ngx_http_headers_in[] = {  
+ngx_http_header_t  ngx_http_headers_in[] = {
 //通过ngx_http_variable_header函数获取ngx_http_core_variables中相关变量的值，这些值的来源就是ngx_http_headers_in中的hander解析的客户端请求头部
 
     { ngx_string("Host"), offsetof(ngx_http_headers_in_t, host),
@@ -117,7 +117,7 @@ ngx_http_header_t  ngx_http_headers_in[] = {
                  ngx_http_process_header_line },
 
 /*
-实现断点续传功能的下载 
+实现断点续传功能的下载
 
 一. 两个必要响应头Accept-Ranges、ETag
         客户端每次提交下载请求时，服务端都要添加这两个响应头，以保证客户端和服务端将此下载识别为可以断点续传的下载：
@@ -203,7 +203,7 @@ ETag：保存文件的唯一标识（我在用的文件名+文件最后修改时
 
 //设置ngx_listening_t的handler，这个handler会在监听到客户端连接时被调用，具体就是在ngx_event_accept函数中，ngx_http_init_connection函数顾名思义，就是初始化这个新建的连接
 void
-ngx_http_init_connection(ngx_connection_t *c) 
+ngx_http_init_connection(ngx_connection_t *c)
 //当建立连接后开辟ngx_http_connection_t结构，这里面存储该服务器端ip:port所在server{}上下文配置信息，和server_name信息等，然后让
 //ngx_connection_t->data指向该结构，这样就可以通过ngx_connection_t->data获取到服务器端的serv loc 等配置信息以及该server{}中的server_name信息
 
@@ -233,10 +233,10 @@ ngx_http_init_connection(ngx_connection_t *c)
 
     /* find the server configuration for the address:port */
 
-    port = c->listening->servers;  
+    port = c->listening->servers;
 
-    if (port->naddrs > 1) {  
-    
+    if (port->naddrs > 1) {
+
         /*
          * there are several addresses on this port and one of them
          * is an "*:port" wildcard so getsockname() in ngx_http_server_addr()
@@ -273,7 +273,7 @@ ngx_http_init_connection(ngx_connection_t *c)
         default: /* AF_INET */
             sin = (struct sockaddr_in *) c->local_sockaddr;
 
-            addr = port->addrs; 
+            addr = port->addrs;
 
             /* the last address is "*" */
             //根据上面的ngx_connection_local_sockaddr函数获取到客户端连接到本地，本地IP地址获取到后，遍历ngx_http_port_t找到对应
@@ -286,7 +286,7 @@ ngx_http_init_connection(ngx_connection_t *c)
 
           /*
                 这里也体现了在ngx_http_init_connection中获取http{}上下文ctx，如果客户端请求中带有host参数，则会继续在ngx_http_set_virtual_server
-                中重新获取对应的server{}和location{}，如果客户端请求不带host头部行，则使用默认的server{},见 ngx_http_init_connection  
+                中重新获取对应的server{}和location{}，如果客户端请求不带host头部行，则使用默认的server{},见 ngx_http_init_connection
             */
             hc->addr_conf = &addr[i].conf;
 
@@ -401,7 +401,7 @@ ngx_http_init_connection方法都是由两个事件（TCP连接建立成功事�
  */
     ngx_add_timer(rev, c->listening->post_accept_timeout, NGX_FUNC_LINE); //把接收事件添加到定时器中，当post_accept_timeout秒还没有客户端数据到来，就关闭连接
     ngx_reusable_connection(c, 1);
-    
+
     if (ngx_handle_read_event(rev, 0, NGX_FUNC_LINE) != NGX_OK) { //当下次有数据从客户端发送过来的时候，会在ngx_epoll_process_events把对应的ready置1。
         ngx_http_close_connection(c);
         return;
@@ -572,7 +572,7 @@ ngx_http_create_request(ngx_connection_t *c)
         return NULL;
     }
 
-    r->pool = pool; 
+    r->pool = pool;
 
     //当连接建立成功后，当收到客户端的第一个请求的时候会通过ngx_http_wait_request_handler->ngx_http_create_request创建ngx_http_request_t
     //同时把r->http_connection指向accept客户端连接成功时候创建的ngx_http_connection_t，这里面有存储server{}上下文ctx和server_name等信息
@@ -990,13 +990,13 @@ ngx_http_process_request_line(ngx_event_t *rev) //gx_http_process_request_line�
         if (rc == NGX_AGAIN) {
             n = ngx_http_read_request_header(r);
 
-            if (n == NGX_AGAIN || n == NGX_ERROR) { 
+            if (n == NGX_AGAIN || n == NGX_ERROR) {
             //如果内核中的数据已经读完，但这时候头部字段还没有解析完毕，则把控制器交还给HTTP，当数据到来的时候触发
             //ngx_http_process_request_line，因为该函数外面rev->handler = ngx_http_process_request_line;
                 return;
             }
         }
-    
+
         rc = ngx_http_parse_request_line(r, r->header_in);
 
         if (rc == NGX_OK) { //请求行解析成功
@@ -1249,7 +1249,7 @@ ngx_http_process_request_uri(ngx_http_request_t *r)
 /*
 GET /sample.jsp HTTP/1.1
 
- 
+
 
 Accept:image/gif.image/jpeg,**
 
@@ -1342,7 +1342,7 @@ ngx_http_process_request_headers(ngx_event_t *rev)
             //这里至少读一次
             n = ngx_http_read_request_header(r); //说明内存中的数据还没有读完，需要读完后继续解析
 
-            if (n == NGX_AGAIN || n == NGX_ERROR) {  
+            if (n == NGX_AGAIN || n == NGX_ERROR) {
                 return;
             }
         }
@@ -1382,7 +1382,7 @@ ngx_http_process_request_headers(ngx_event_t *rev)
             h->key.len = r->header_name_end - r->header_name_start;
             h->key.data = r->header_name_start;
             h->key.data[h->key.len] = '\0';
-            
+
             //拷贝name:value中的value到value中，value后的换行符被用\0替换了
             h->value.len = r->header_end - r->header_start;
             h->value.data = r->header_start;
@@ -1404,11 +1404,11 @@ ngx_http_process_request_headers(ngx_event_t *rev)
 
             //见ngx_http_headers_in  //检查解析到的头部key:value中的对应ngx_http_header_t结构，即ngx_http_headers_in中的成员
             hh = ngx_hash_find(&cmcf->headers_in_hash, h->hash,
-                               h->lowcase_key, h->key.len); 
-            
+                               h->lowcase_key, h->key.len);
+
 
             //从ngx_http_headers_in找到与name匹配的字符串，然后只需对应的handler,一般就是把解析出的name:value中的value存放到headers_in成员的headers链表中
-            
+
             //参考ngx_http_headers_in，通过该数组中的回调hander来存储解析到的请求行name:value中的value到headers_in的响应成员中，见ngx_http_process_request_headers
             if (hh && hh->handler(r, h, hh->offset) != NGX_OK) {
                 return;
@@ -1774,7 +1774,7 @@ static ngx_int_t
 ngx_http_process_connection(ngx_http_request_t *r, ngx_table_elt_t *h,
     ngx_uint_t offset)
 {
-    if (ngx_strcasestrn(h->value.data, "close", 5 - 1)) { 
+    if (ngx_strcasestrn(h->value.data, "close", 5 - 1)) {
         r->headers_in.connection_type = NGX_HTTP_CONNECTION_CLOSE;
 
     } else if (ngx_strcasestrn(h->value.data, "keep-alive", 10 - 1)) {//长连接
@@ -1893,7 +1893,7 @@ ngx_http_process_request_header(ngx_http_request_t *r)
 {
     if (r->headers_in.server.len == 0
         && ngx_http_set_virtual_server(r, &r->headers_in.server)
-           == NGX_ERROR)  
+           == NGX_ERROR)
     {
         return NGX_ERROR;
     }
@@ -1963,7 +1963,7 @@ ngx_http_process_request方法负责在接收完HTTP头部后，第一次与各�
 */
 //ngx_http_process_request_headers头部行解析完毕后调用函数ngx_http_process_request_header
 void
-ngx_http_process_request(ngx_http_request_t *r) 
+ngx_http_process_request(ngx_http_request_t *r)
 {
     ngx_connection_t  *c;
 
@@ -2395,7 +2395,7 @@ ngx_http_process_request方法负责在接收完HTTP头部后，第一次与各�
 
 HTTP框架无论是调用ngx_http_process_request方法（首次从业务上处理请求）还是ngx_http_request_handler方法（TCP连接上后续的事件触发时）处理
 请求，最后都有一个步骤，就是调用ngx_http_run_posted_requests方法处理post请求
-*/ 
+*/
 //客户端事件处理handler一般(write(read)->handler)一般为ngx_http_request_handler， 和后端的handler一般(write(read)->handler)一般为ngx_http_upstream_handler， 和后端的
 static void
 ngx_http_request_handler(ngx_event_t *ev)
@@ -2427,7 +2427,7 @@ ngx_http_request_ handler是HTTP请求上读／写事件的回调方法。在ngx
     if (ev->write) { //说明ev是ngx_connection_t->write
         r->write_event_handler(r); //ngx_http_core_run_phases
 
-    } else {//说明ev是ngx_connection_t->read事件 
+    } else {//说明ev是ngx_connection_t->read事件
         r->read_event_handler(r);
     }
 
@@ -2464,11 +2464,11 @@ root_r为原始最上层的请求r，postponed为该r->postponed指针，
 sbuxy_r中的x代表的是该子请求的父请求时x，y代表该子请求时父请求的第y个子请求。
 datax代表subx_r请求产生的一段数据,它是通过ngx_http_postpone_filter_add添加到r->postponed链中
 
-                          -----root_r     
+                          -----root_r
                           |postponed
                           |
             -------------sub1_r-------sub2_r-------data_root(属于root_r数据)
-            |                           |postponed                    
+            |                           |postponed
             |postponed                  |
             |                           sub21_r-----data2(属于sub2_r数据)
             |                           |
@@ -2550,7 +2550,7 @@ ngx_http_run_posted_requests(ngx_connection_t *c) //执行r->main->posted_reques
           调用这个post请求ngx_http_request_t结构体中的write event handler方法。为什么不是执行read_ event_ handler方法呢？原因
           很简单，子请求不是被网络事件驱动的，因此，执行post请求时就相当于有可写事件，由Nginx主动做出动作。
           */ //一般子请求的write_event_handler在ngx_http_set_write_handler中设置为ngx_http_writer
-        r->write_event_handler(r);   /* 遍历该节点（请求） */ 
+        r->write_event_handler(r);   /* 遍历该节点（请求） */
     }
 }
 
@@ -2594,7 +2594,7 @@ read_ client_request_body方法或者ngx_http_subrequest方法），都会把引
 来结束请求，而ngx_http_finalize_request方法实际上却会在引用计数减1后先检查引用计数的值，如果不为O是不会真正销毁请求的。
 */ //ngx_http_finalize_request -> ngx_http_finalize_connection ,注意和ngx_http_terminate_request的区别
 void
-ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc) 
+ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
 {//subrequest注意ngx_http_run_posted_requests与ngx_http_postpone_filter ngx_http_finalize_request配合阅读
     ngx_connection_t          *c;
     ngx_http_request_t        *pr;
@@ -2612,7 +2612,7 @@ ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
 查引用计数情况，并不一定会销毁请求。
      */
     if (rc == NGX_DONE) {
-        ngx_http_finalize_connection(r);  
+        ngx_http_finalize_connection(r);
         return;
     }
 
@@ -2636,7 +2636,7 @@ ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
     /*
     检查当前请求是否为subrequest子请求，如果是子请求，那么调用post_subrequest下的handler回调方法。subrequest的用法，可以看
     到post_subrequest正是此时被调用的。
-     */  /* 如果当前请求是一个子请求，检查它是否有回调handler，有的话执行之 */  
+     */  /* 如果当前请求是一个子请求，检查它是否有回调handler，有的话执行之 */
     if (r != r->main && r->post_subrequest) {//如果当前请求属于某个原始请求的子请求
         rc = r->post_subrequest->handler(r, r->post_subrequest->data, rc); //r变量是子请求（不是父请求）
     }
@@ -2699,12 +2699,12 @@ ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
     }
 
     if (r != r->main) { //子请求
-         /* 该子请求还有未处理完的数据或者子请求 */  
+         /* 该子请求还有未处理完的数据或者子请求 */
         if (r->buffered || r->postponed) { //检查out缓冲区内是否还有没发送完的响应
-             /* 添加一个该子请求的写事件，并设置合适的write event hander， 
-               以便下次写事件来的时候继续处理，这里实际上下次执行时会调用ngx_http_output_filter函数， 
-               最终还是会进入ngx_http_postpone_filter进行处理，在该函数中不一定会把数据发送出去，而是挂接到postpone链上，等高优先级的子请求先发送 */ 
-            if (ngx_http_set_write_handler(r) != NGX_OK) { 
+             /* 添加一个该子请求的写事件，并设置合适的write event hander，
+               以便下次写事件来的时候继续处理，这里实际上下次执行时会调用ngx_http_output_filter函数，
+               最终还是会进入ngx_http_postpone_filter进行处理，在该函数中不一定会把数据发送出去，而是挂接到postpone链上，等高优先级的子请求先发送 */
+            if (ngx_http_set_write_handler(r) != NGX_OK) {
                 ngx_http_terminate_request(r, 0);
             }
 
@@ -2717,15 +2717,15 @@ ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
         posted_requests链表中，这样ngx_http_run_posted_requests方法就会调用父请求的write_event_handler方法了。
           */
 
-        /* 该子请求已经处理完毕，如果它拥有发送数据的权利，则将权利移交给父请求， */  
+        /* 该子请求已经处理完毕，如果它拥有发送数据的权利，则将权利移交给父请求， */
         pr = r->parent;
 
         /*
-                          -----root_r     
+                          -----root_r
                           |postponed
                           |
             -------------sub1_r-------sub2_r-------data_root(属于root_r数据)
-            |                           |postponed                    
+            |                           |postponed
             |postponed                  |
             |                           sub21_r-----data2(属于sub2_r数据)
             |                           |
@@ -2740,7 +2740,7 @@ ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
 
           下面的if判断只有r为sub11_r才满足r == c->data，如果当前r不是sub11_r，则把
      */
-        if (r == c->data) { 
+        if (r == c->data) {
         //这个优先级最高的子请求数据发送完毕了，则直接从pr->postponed中摘除，例如这次摘除的是sub11_r，则下个优先级最高发送客户端数据的是sub12_r
 
             r->main->count--;
@@ -2763,13 +2763,13 @@ ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
             }
 
             r->done = 1;
-             /* 如果该子请求不是提前完成，则从父请求的postponed链表中删除 */  
+             /* 如果该子请求不是提前完成，则从父请求的postponed链表中删除 */
             if (pr->postponed && pr->postponed->request == r) {
                 pr->postponed = pr->postponed->next;
             }
 
-            /* 将发送权利移交给父请求，父请求下次执行的时候会发送它的postponed链表中可以 
-               发送的数据节点，或者将发送权利移交给它的下一个子请求 */ 
+            /* 将发送权利移交给父请求，父请求下次执行的时候会发送它的postponed链表中可以
+               发送的数据节点，或者将发送权利移交给它的下一个子请求 */
             c->data = pr;
 
         } else {
@@ -2777,10 +2777,10 @@ ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
             ngx_log_debug2(NGX_LOG_DEBUG_HTTP, c->log, 0,
                            "http finalize non-active request: \"%V?%V\"",
                            &r->uri, &r->args);
-            /* 到这里其实表明该子请求提前执行完成，而且它没有产生任何数据，则它下次再次获得 
-               执行机会时，将会执行ngx_http_request_finalzier函数，它实际上是执行 
-               ngx_http_finalize_request（r,0），也就是什么都不干，直到轮到它发送数据时， 
-               ngx_http_finalize_request 函数会将它从父请求的postponed链表中删除 */  
+            /* 到这里其实表明该子请求提前执行完成，而且它没有产生任何数据，则它下次再次获得
+               执行机会时，将会执行ngx_http_request_finalzier函数，它实际上是执行
+               ngx_http_finalize_request（r,0），也就是什么都不干，直到轮到它发送数据时，
+               ngx_http_finalize_request 函数会将它从父请求的postponed链表中删除 */
             r->write_event_handler = ngx_http_request_finalizer; //也就是优先级低的请求比优先级高的请求先得到后端返回的数据，
 
             if (r->waited) {
@@ -2788,7 +2788,7 @@ ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
             }
         }
 
-         /* 将父请求加入posted_request队尾，获得一次运行机会 */  
+         /* 将父请求加入posted_request队尾，获得一次运行机会 */
         if (ngx_http_post_request(pr, NULL) != NGX_OK) {
             r->main->count++;
             ngx_http_terminate_request(r, 0);
@@ -2802,14 +2802,14 @@ ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
         return;
     }
 
-    /* 这里是处理主请求结束的逻辑，如果主请求有未发送的数据或者未处理的子请求， 则给主请求添加写事件，并设置合适的write event hander， 
-       以便下次写事件来的时候继续处理 */  
-       
+    /* 这里是处理主请求结束的逻辑，如果主请求有未发送的数据或者未处理的子请求， 则给主请求添加写事件，并设置合适的write event hander，
+       以便下次写事件来的时候继续处理 */
+
     //ngx_http_request_t->out中还有未发送的包体，
     //ngx_http_finalize_request->ngx_http_set_write_handler->ngx_http_writer通过这种方式把未发送完毕的响应报文发送出去
     if (r->buffered || c->buffered || r->postponed || r->blocked) { //例如还有未发送的数据，见ngx_http_copy_filter，则buffered不为0
 
-        if (ngx_http_set_write_handler(r) != NGX_OK) { 
+        if (ngx_http_set_write_handler(r) != NGX_OK) {
             ngx_http_terminate_request(r, 0);
         }
 
@@ -2920,8 +2920,10 @@ ngx_http_terminate_handler(ngx_http_request_t *r)
 
 /*
 ngx_http_finalize_connection方法虽然比ngx_http_close_request方法高了一个层次，但HTTP模块一般还是不会直接调用它。
-ngx_http_finalize_connection方法在结束请求时，解决了keepalive特性和子请求的问题   ngx_http_finalize_request -> ngx_http_finalize_connection ,注意和ngx_http_terminate_request的区别
-*/ //该函数用于判断是理解关闭连接，还是通过保活超时关闭连接，还是延迟关闭连接
+ngx_http_finalize_connection方法在结束请求时，解决了keepalive特性和子请求的问题
+ngx_http_finalize_request -> ngx_http_finalize_connection ,注意和ngx_http_terminate_request的区别
+*/
+//该函数用于判断是直接关闭连接，还是通过保活超时关闭连接，还是延迟关闭连接
 static void
 ngx_http_finalize_connection(ngx_http_request_t *r) //ngx_http_finalize_request->ngx_http_finalize_connection
 {
@@ -2937,8 +2939,8 @@ ngx_http_finalize_connection(ngx_http_request_t *r) //ngx_http_finalize_request-
     clcf = ngx_http_get_module_loc_conf(r, ngx_http_core_module);
 
     /*
-    查看原始请求的引用计数．如果不等于1，则表示还有多个动作在操作着请求，接着继续检查discard_body标志位。如果
-discard_body为l，则表示正在丢弃包体，这时会再一次把请求的read_event_handler成员设为ngx_http_discarded_request_body_handler方法，
+    查看原始请求的引用计数．如果不等于1，则表示还有多个动作在操作着请求，接着继续检查discard_body标志位。
+    如果discard_body为1，则表示正在丢弃包体，这时会再一次把请求的read_event_handler成员设为ngx_http_discarded_request_body_handler方法，
      */
     if (r->main->count != 1) {
 
@@ -2963,17 +2965,18 @@ discard_body为l，则表示正在丢弃包体，这时会再一次把请求的r
     }
 
     /*
-    如果引用计数为1，则说明这时要真的准备结束请求了。不过，还要检查请求的keepalive成员，如果keepalive为1，则说明这个请求需要释放，
-但TCP连接还是要复用的；如果keepalive为0就不需要考虑keepalive请求了，但还需要检测请求的lingering_close成员，如果lingering_close为1，
-则说明需要延迟关闭请求，这时也不能真的去结束请求，如果lingering_close为0，才真的结束请求。
+    如果引用计数为1，则说明这时要真的准备结束请求了。
+    不过，还要检查请求的keepalive成员，如果keepalive为1，则说明这个请求需要释放，但TCP连接还是要复用的；
+    如果keepalive为0就不需要考虑keepalive请求了，但还需要检测请求的lingering_close成员，
+    如果lingering_close为1，则说明需要延迟关闭请求，这时也不能真的去结束请求，如果lingering_close为0，才真的结束请求。
      */
     if (!ngx_terminate
          && !ngx_exiting
          && r->keepalive
-         && clcf->keepalive_timeout > 0) 
-         //如果客户端请求携带的报文头中设置了长连接，并且我们的keepalive_timeout配置项大于0(默认75s),则不能关闭连接，只有等这个时间到后还没有数据到来，才关闭连接
+         && clcf->keepalive_timeout > 0)
     {
-        ngx_http_set_keepalive(r); 
+        //如果客户端请求携带的报文头中设置了长连接，并且我们的keepalive_timeout配置项大于0(默认75s)，则不能关闭连接，只有等这个时间到后还没有数据到来，才关闭连接
+        ngx_http_set_keepalive(r);
         return;
     }
 
@@ -2984,8 +2987,8 @@ discard_body为l，则表示正在丢弃包体，这时会再一次把请求的r
                 || r->connection->read->ready)))
     {
        /*
-        调用ngx_http_set_lingering_close方法延迟关闭请求。实际上，这个方法的意义就在于把一些必须做的事情做完
-        （如接收用户端发来的字符流）再关闭连接。
+        调用ngx_http_set_lingering_close方法延迟关闭请求。
+        实际上，这个方法的意义就在于把一些必须做的事情做完（如接收用户端发来的字符流）再关闭连接。
         */
         ngx_http_set_lingering_close(r);
         return;
@@ -3077,7 +3080,7 @@ ngx_http_writer(ngx_http_request_t *r)
 要看事件的delayed标志位。如果是限速把写事件加入定时器，一定会把delayed标志位置为1，如果写事件的delayed标志位为0，那就是真的超时
 了，这时调用ngx_http_finalize_request方法结束请求，传人的参数是NGX_HTTP_REQUEST_TIME_OUT，表示需要向客户端发送408错误码；
  */
-    if (wev->timedout) { 
+    if (wev->timedout) {
     /*
     因为超时的原因执行了该write_event_handler(例如在向客户端发送数据的过程中，客户端一直不recv，就会造成内核缓存区满，
     数据永远发送不出去，于是就在ngx_http_set_write_handler中添加了写事件定时器)，从而可以检查是否写超时，从而可以关闭连接
@@ -3624,7 +3627,7 @@ ngx_http_keepalive_handler(ngx_event_t *rev)
     c->log_error = NGX_ERROR_IGNORE_ECONNRESET;
     ngx_set_socket_errno(0);
 
-    n = c->recv(c, b->last, size); //保活超时，同时执行一次读操作，这样就可以先检查对方是否已经关闭了tcp连接， 
+    n = c->recv(c, b->last, size); //保活超时，同时执行一次读操作，这样就可以先检查对方是否已经关闭了tcp连接，
     c->log_error = NGX_ERROR_INFO;
 
     if (n == NGX_AGAIN) {//tcp连接正常，并且没有数据
@@ -3803,7 +3806,7 @@ ngx_http_lingering_close_handler(ngx_event_t *rev)
     timer *= 1000;
 
     if (timer > clcf->lingering_timeout) {
-        timer = clcf->lingering_timeout; 
+        timer = clcf->lingering_timeout;
     }
 
     //如果在lingering_timeout时间内又数据达到，则把重新添加定时器，其时间为timer，因此只要lingering_timeout时间内有数据达到，
@@ -3856,7 +3859,7 @@ ngx_http_send_special(ngx_http_request_t *r, ngx_uint_t flags)
     if (flags & NGX_HTTP_LAST) {
 
         if (r == r->main && !r->post_action) {//一般进入这个if里面
-            b->last_buf = 1; 
+            b->last_buf = 1;
 
         } else {
             b->sync = 1;
@@ -3875,7 +3878,7 @@ ngx_http_send_special(ngx_http_request_t *r, ngx_uint_t flags)
     ngx_int_t sync = b->sync;
     ngx_int_t last_in_chain = b->last_in_chain;
     ngx_int_t flush = b->flush;
-    
+
     ngx_log_debugall(r->connection->log, 0, "ngx http send special, flags:%ui, last_buf:%i, sync:%i, last_in_chain:%i, flush:%i",
         flags, last_buf, sync,  last_in_chain, flush);
     return ngx_http_output_filter(r, &out);
@@ -3941,7 +3944,7 @@ ngx_http_close_request(ngx_http_request_t *r, ngx_int_t rc)
 
     r->count--;
 
-    /* 
+    /*
      在HTTP模块中每进行一类新的操作，包括为一个请求添加新的事件，或者把一些已绎由定时器、epoll中移除的事件重新加入其中，都需要把这个
      请求的引用计数加1。这是因为需要让HTTP框架知道，HTTP模块对于该请求有独立的异步处理机制，将由该HTTP模块决定这个操作什么时候结束，防
      止在这个操作还未结束时HTTP框架却把这个请求销毁了（如其他HTTP模块通过调用ngx_http_finalize_request方法要求HTTP框架结束请求），导致
@@ -4025,7 +4028,7 @@ ngx_http_free_request(ngx_http_request_t *r, ngx_int_t rc) //释放request的相
 
     log->action = "logging request";
 
-    /* 
+    /*
     在11个ngx_http_phases阶段中，最后一个阶段叫做NGX_HTTP_LOG_PHASE，它是用来记录客户端的访问日志的。在这一步骤中，将会依次
     调用NGX_HTTP_LOG_PHASE阶段的所有回调方法记录日志。官方的ngx_http_log_module模块就是在这里记录access_log的。
      */
@@ -4035,27 +4038,27 @@ ngx_http_free_request(ngx_http_request_t *r, ngx_int_t rc) //释放request的相
 
     /*
      socketstructtcpwindows数据结构此选项指定函数close对面向连接的协议如何操作（如TCP）。内核缺省close操作是立即返回，如果有
-     数据残留在套接口缓冲区中则系统将试着将这些数据发送给对方。 
+     数据残留在套接口缓冲区中则系统将试着将这些数据发送给对方。
 
-     SO_LINGER选项用来改变此缺省设置。使用如下结构： 
-     struct linger { 
-     
-          int l_onoff; / * 0 = off, nozero = on * / 
-     
-          int l_linger; / * linger time * / 
-     
-     }; 
-     
-     有下列三种情况： 
-     
-     1、设置 l_onoff为0，则该选项关闭，l_linger的值被忽略，等于内核缺省情况，close调用会立即返回给调用者，如果可能将会传输任何未发送的数据； 
-     
+     SO_LINGER选项用来改变此缺省设置。使用如下结构：
+     struct linger {
+
+          int l_onoff; / * 0 = off, nozero = on * /
+
+          int l_linger; / * linger time * /
+
+     };
+
+     有下列三种情况：
+
+     1、设置 l_onoff为0，则该选项关闭，l_linger的值被忽略，等于内核缺省情况，close调用会立即返回给调用者，如果可能将会传输任何未发送的数据；
+
      2、设置 l_onoff为非0，l_linger为0，则套接口关闭时TCP夭折连接，TCP将丢弃保留在套接口发送缓冲区中的任何数据并发送一个RST给对方，而不是通常的四
-     分组终止序列，这避免了TIME_WAIT状态； 
+     分组终止序列，这避免了TIME_WAIT状态；
      3、设置 l_onoff 为非0，l_linger为非0，当套接口关闭时内核将拖延一段时间（由l_linger决定）。如果套接口缓冲区中仍残留数据，进程将处于睡眠状态，
      直到（a）所有数据发送完且被对方确认，之后进行正常的终止序列（描述字访问计数为0）或（b）延迟时间到。此种情况下，应用程序检查close的返回值是非常重要的，
      如果在数据发送完并被确认前时间到，close将返回EWOULDBLOCK错误且套接口发送缓冲区中的任何数据都丢失 。 close的成功返回仅告诉我们发送的数据（和FIN）已
-     由对方TCP确认，它并不能告诉我们对方应用进程是否已读了数据。如果套接口设为非阻塞的，它将不等待close完成。 
+     由对方TCP确认，它并不能告诉我们对方应用进程是否已读了数据。如果套接口设为非阻塞的，它将不等待close完成。
 
      SO_LINGER是一个socket选项，通过setsockopt API进行设置，使用起来比较简单，但其实现机制比较复杂，且字面意思上比较难理解。
      解释最清楚的当属《Unix网络编程卷1》中的说明（7.5章节），这里简单摘录：
@@ -4063,12 +4066,12 @@ ngx_http_free_request(ngx_http_request_t *r, ngx_int_t rc) //释放request的相
      struct linger {
           int l_onoff; / * 0 = off, nozero = on * /
           int l_linger; / * linger time * /
-     
+
      };
-     
-     
-     
-     
+
+
+
+
      其取值和处理如下：
      1、设置 l_onoff为0，则该选项关闭，l_linger的值被忽略，等于内核缺省情况，close调用会立即返回给调用者，如果可能将会传输任何未发送的数据；
      2、设置 l_onoff为非0，l_linger为0，则套接口关闭时TCP夭折连接，TCP将丢弃保留在套接口发送缓冲区中的任何数据并发送一个RST给对方，
@@ -4077,7 +4080,7 @@ ngx_http_free_request(ngx_http_request_t *r, ngx_int_t rc) //释放request的相
         如果套接口缓冲区中仍残留数据，进程将处于睡眠状态，直 到（a）所有数据发送完且被对方确认，之后进行正常的终止序列（描述字访问计数为0）
         或（b）延迟时间到。此种情况下，应用程序检查close的返回值是非常重要的，如果在数据发送完并被确认前时间到，close将返回EWOULDBLOCK错误且套接口发送缓冲区中的任何数据都丢失。
         close的成功返回仅告诉我们发送的数据（和FIN）已由对方TCP确认，它并不能告诉我们对方应用进程是否已读了数据。如果套接口设为非阻塞的，它将不等待close完成。
-        
+
      第一种情况其实和不设置没有区别，第二种情况可以用于避免TIME_WAIT状态，但在Linux上测试的时候，并未发现发送了RST选项，而是正常进行了四步关闭流程，
      初步推断是“只有在丢弃数据的时候才发送RST”，如果没有丢弃数据，则走正常的关闭流程。
      查看Linux源码，确实有这么一段注释和源码：
@@ -4094,14 +4097,14 @@ ngx_http_free_request(ngx_http_request_t *r, ngx_int_t rc) //释放request的相
      NET_INC_STATS_USER(sock_net(sk), LINUX_MIB_TCPABORTONCLOSE);
      tcp_set_state(sk, TCP_CLOSE);
      tcp_send_active_reset(sk, sk->sk_allocation);
-     } 
+     }
      另外，从原理上来说，这个选项有一定的危险性，可能导致丢数据，使用的时候要小心一些，但我们在实测libmemcached的过程中，没有发现此类现象，
      应该是和libmemcached的通讯协议设置有关，也可能是我们的压力不够大，不会出现这种情况。
-     
-     
+
+
      第三种情况其实就是第一种和第二种的折中处理，且当socket为非阻塞的场景下是没有作用的。
      对于应对短连接导致的大量TIME_WAIT连接问题，个人认为第二种处理是最优的选择，libmemcached就是采用这种方式，
-     从实测情况来看，打开这个选项后，TIME_WAIT连接数为0，且不受网络组网（例如是否虚拟机等）的影响。 
+     从实测情况来看，打开这个选项后，TIME_WAIT连接数为0，且不受网络组网（例如是否虚拟机等）的影响。
      */
     if (r->connection->timedout) { //减少time_wait状态，内核的四次挥手,加快四次挥手。只有在关闭套接字的时候内核还有数据没有接收或者发送才会发送RST
         clcf = ngx_http_get_module_loc_conf(r, ngx_http_core_module);
